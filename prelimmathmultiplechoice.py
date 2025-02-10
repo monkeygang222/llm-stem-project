@@ -81,7 +81,7 @@ from transformers import AutoModelForMultipleChoice, TrainingArguments, Trainer
 
 model = AutoModelForMultipleChoice.from_pretrained("google-bert/bert-base-uncased")
 training_args = TrainingArguments(
-    output_dir="my_awesome_math_model",
+    output_dir="prelim_model",
     eval_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
@@ -111,13 +111,13 @@ candidate2 = data["test"][0]["classes"][1]
 options = [candidate1, candidate2]
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("huggingface/my_awesome_math_model")
+tokenizer = AutoTokenizer.from_pretrained("huggingface/prelim_model")
 inputs = tokenizer([[prompt, candidate1], [prompt, candidate2]], return_tensors="pt", padding=True)
 labels = torch.tensor(0).unsqueeze(0)
 
 from transformers import AutoModelForMultipleChoice
 
-model = AutoModelForMultipleChoice.from_pretrained("huggingface/my_awesome_math_model")
+model = AutoModelForMultipleChoice.from_pretrained("huggingface/prelim_model")
 outputs = model(**{k: v.unsqueeze(0) for k, v in inputs.items()}, labels=labels)
 logits = outputs.logits
 predicted_class = logits.argmax().item()
